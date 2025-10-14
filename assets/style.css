@@ -1,0 +1,700 @@
+:root {
+    --bios-bg: #040707;
+    --bios-text: #39ff14;
+    --boot-bg: #000820;
+    --boot-text: #a8c4ff;
+    --boot-highlight: #3e72ff;
+    --login-bg: #0b2d69;
+    --login-window: rgba(5, 20, 54, 0.9);
+    --desktop-gradient-top: #0f2c6d;
+    --desktop-gradient-bottom: #041538;
+    --desktop-accent: rgba(69, 136, 255, 0.35);
+    --window-blue: #1f4ea6;
+    --window-blue-light: #6ca3ff;
+    --taskbar-blue: #0c2c74;
+    --taskbar-blue-light: #1c55b5;
+    --taskbar-border: rgba(255, 255, 255, 0.25);
+    --taskbar-text: #f4f8ff;
+    --window-bg: rgba(8, 20, 48, 0.92);
+    --window-border: rgba(255, 255, 255, 0.2);
+    --terminal-bg: #010101;
+    --terminal-text: #25ff97;
+    --icon-glow: rgba(114, 195, 255, 0.45);
+    font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bios-bg);
+    color: #fff;
+    min-height: 100vh;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    padding: 40px;
+}
+
+.screen.active {
+    display: block;
+}
+
+.bios-screen {
+    background: linear-gradient(180deg, #060b0b 0%, #020404 100%);
+    color: var(--bios-text);
+    font-size: 1.2rem;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+}
+
+.bios-header {
+    font-size: 2rem;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+}
+
+.bios-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 240px;
+}
+
+.bios-line {
+    animation: flicker 1.4s infinite alternate;
+}
+
+.bios-line--accent {
+    color: #7cff86;
+}
+
+.bios-footer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.boot-screen {
+    background: radial-gradient(circle, rgba(16, 38, 88, 1) 0%, rgba(0, 8, 32, 1) 70%);
+    color: var(--boot-text);
+    text-align: center;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+}
+
+.boot-logo {
+    margin-top: 150px;
+}
+
+.boot-title {
+    font-size: 3rem;
+    letter-spacing: 10px;
+    margin-bottom: 10px;
+}
+
+.boot-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.boot-progress {
+    width: 40%;
+    min-width: 220px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin: 60px auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.boot-bar {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--boot-highlight), #8fbcff);
+    transition: width 0.4s ease;
+}
+
+.boot-messages {
+    font-size: 1rem;
+    opacity: 0.85;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.boot-message {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.boot-message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.login-screen {
+    background: linear-gradient(180deg, #103e99 0%, #051c4e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-window {
+    width: 420px;
+    background: var(--login-window);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-header {
+    background: linear-gradient(90deg, #123c98, #1f5bd7);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: bold;
+}
+
+.logo-orb {
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle at 30% 30%, #9bf2ff, #1e78ff);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(103, 173, 255, 0.8);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.logo-brand {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.logo-edition {
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+
+.login-title {
+    font-size: 1rem;
+    opacity: 0.85;
+    text-align: right;
+}
+
+.login-body {
+    padding: 24px;
+    color: #dbe7ff;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3e86ff, #65d6ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.user-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.user-hint {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+#login-form {
+    display: grid;
+    gap: 10px;
+}
+
+#login-form label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+#login-form input {
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+}
+
+#login-form button {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #1d52c8, #3e86ff);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#login-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(62, 134, 255, 0.4);
+}
+
+.login-error {
+    min-height: 18px;
+    font-size: 0.85rem;
+    color: #ff9c9c;
+    text-align: center;
+}
+
+.login-status {
+    min-height: 18px;
+    font-size: 0.85rem;
+    color: #92ffb9;
+    text-align: center;
+}
+
+.desktop-screen {
+    padding: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(148, 211, 255, 0.1), transparent 60%),
+                linear-gradient(180deg, var(--desktop-gradient-top), var(--desktop-gradient-bottom));
+    position: relative;
+    overflow: hidden;
+}
+
+.desktop {
+    position: absolute;
+    inset: 0 0 58px 0;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(13, 40, 100, 0.85), rgba(6, 18, 56, 0.9)),
+                radial-gradient(circle at 80% 10%, var(--desktop-accent), transparent 60%);
+    background-blend-mode: screen;
+    display: flex;
+    flex-direction: column;
+}
+
+.desktop-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 16px;
+    max-width: 420px;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: #e3f1ff;
+    cursor: pointer;
+    padding: 12px 6px;
+    border-radius: 10px;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 12px var(--icon-glow);
+    outline: none;
+}
+
+.icon-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(69, 136, 255, 0.85));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.icon-terminal::before,
+.icon-briefing::before,
+.icon-scoreboard::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.icon-terminal::before {
+    background-image: linear-gradient(transparent, transparent), url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%23061434" viewBox="0 0 24 24"%3E%3Cpath d="M4 4h16v16H4z" fill="%2301223a"/%3E%3Cpath d="M7 8.5l3 2.5-3 2.5v-1.8l1.2-.7L7 9.8V8.5zm5 6h5v1h-5z" fill="%23b9ebff"/%3E%3C/svg%3E');
+}
+
+.icon-briefing::before {
+    background-image: linear-gradient(transparent, transparent), url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%23061434" viewBox="0 0 24 24"%3E%3Cpath d="M5 4h14a1 1 0 011 1v14l-4-3-4 3-4-3-4 3V5a1 1 0 011-1z" fill="%2301223a"/%3E%3Cpath d="M8 7h8v2H8zm0 4h5v2H8z" fill="%23f6fbff"/%3E%3C/svg%3E');
+}
+
+.icon-scoreboard::before {
+    background-image: linear-gradient(transparent, transparent), url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%23061434" viewBox="0 0 24 24"%3E%3Crect x="4" y="5" width="16" height="12" rx="1" fill="%2301223a"/%3E%3Cpath d="M7 8h3v6H7zm7 0h3v6h-3z" fill="%23b9ebff"/%3E%3Cpath d="M11 8h2v6h-2z" fill="%23f7ff9c"/%3E%3C/svg%3E');
+}
+
+.icon-label {
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.window {
+    position: absolute;
+    top: 120px;
+    left: 220px;
+    width: 480px;
+    max-width: calc(100% - 120px);
+    background: var(--window-bg);
+    border: 1px solid var(--window-border);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#window-briefing {
+    top: 110px;
+    left: 100px;
+    width: 420px;
+}
+
+#window-terminal {
+    top: 140px;
+    left: 360px;
+}
+
+#window-scoreboard {
+    top: 260px;
+    left: 160px;
+    width: 360px;
+}
+
+.window.visible {
+    display: flex;
+}
+
+.window-titlebar {
+    background: linear-gradient(90deg, var(--window-blue), var(--window-blue-light));
+    color: #fff;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.window-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.window-btn {
+    width: 28px;
+    height: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    background: rgba(5, 22, 64, 0.7);
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 0.9rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.window-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.window-body {
+    padding: 18px;
+    color: #e3f1ff;
+    line-height: 1.5;
+}
+
+.window.active-window {
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.65);
+}
+
+.terminal-window {
+    padding: 0;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+}
+
+.terminal-output {
+    background: var(--terminal-bg);
+    color: var(--terminal-text);
+    padding: 18px;
+    min-height: 260px;
+    max-height: 320px;
+    overflow-y: auto;
+    border-bottom: 1px solid rgba(37, 255, 151, 0.3);
+}
+
+.terminal-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: rgba(0, 0, 0, 0.85);
+    color: var(--terminal-text);
+}
+
+.prompt {
+    color: var(--terminal-text);
+}
+
+#terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--terminal-text);
+    font-size: 1rem;
+    outline: none;
+}
+
+.briefing-content ul,
+.scoreboard-content ol {
+    margin: 12px 0 12px 20px;
+}
+
+.briefing-content li,
+.scoreboard-content li {
+    margin-bottom: 6px;
+}
+
+.start-menu {
+    position: absolute;
+    bottom: 70px;
+    left: 16px;
+    width: 260px;
+    background: linear-gradient(180deg, rgba(13, 40, 100, 0.97), rgba(5, 18, 56, 0.97));
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 10px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+    display: none;
+    overflow: hidden;
+    z-index: 200;
+}
+
+.start-menu.open {
+    display: block;
+}
+
+.start-menu-header {
+    padding: 14px 16px;
+    background: linear-gradient(90deg, rgba(28, 104, 255, 0.8), rgba(125, 191, 255, 0.8));
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.start-menu-body {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 8px;
+}
+
+.start-menu-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f4f8ff;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.start-menu-item:hover,
+.start-menu-item:focus-visible {
+    background: rgba(69, 136, 255, 0.35);
+    transform: translateX(3px);
+    outline: none;
+}
+
+.taskbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    background: linear-gradient(180deg, var(--taskbar-blue-light), var(--taskbar-blue));
+    border-top: 1px solid var(--taskbar-border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    gap: 14px;
+}
+
+.start-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(90deg, rgba(40, 120, 255, 0.9), rgba(135, 195, 255, 0.9));
+    color: var(--taskbar-text);
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.start-button:hover,
+.start-button:focus-visible {
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.start-orb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #d9f7ff, #2e7bff);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+.taskbar-items {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    align-items: stretch;
+}
+
+.taskbar-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--taskbar-text);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.taskbar-item.hidden {
+    display: none;
+}
+
+.taskbar-item.active {
+    background: rgba(69, 136, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.taskbar-item:hover {
+    background: rgba(69, 136, 255, 0.3);
+}
+
+.system-tray {
+    min-width: 80px;
+    display: flex;
+    justify-content: flex-end;
+    color: var(--taskbar-text);
+    font-size: 0.95rem;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.tray-clock {
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@keyframes bootload {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes flicker {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 900px) {
+    .desktop-icons {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    }
+
+    .window {
+        left: 40px;
+        width: calc(100% - 80px);
+    }
+}
+
+@media (max-width: 600px) {
+    .screen {
+        padding: 20px;
+    }
+
+    .boot-title {
+        font-size: 2.4rem;
+    }
+
+    .login-window {
+        width: 92%;
+    }
+
+    .desktop {
+        padding: 16px;
+    }
+
+    .window {
+        top: 80px;
+        left: 20px;
+        width: calc(100% - 40px);
+    }
+}

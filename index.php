@@ -13,14 +13,8 @@ $title = 'LEBASI XP Terminal';
     <div id="app" class="bios">
         <div class="screen bios-screen active" id="bios-screen">
             <div class="bios-header">LEBASI BIOS v1.0</div>
-            <div class="bios-body">
-                <p>Initializing LE Basi LAN Party BIOS...</p>
-                <p>Detecting players: 12 seats ready.</p>
-                <p>Checking gaming rigs... OK</p>
-                <p>Loading energy drinks... OK</p>
-                <p>Preparing retro XP boot...</p>
-                <p class="bios-footer">Press DEL to enter party setup</p>
-            </div>
+            <div class="bios-body" id="bios-body" role="log" aria-live="polite"></div>
+            <div class="bios-footer">Press DEL to enter party setup</div>
         </div>
 
         <div class="screen boot-screen" id="boot-screen">
@@ -29,14 +23,9 @@ $title = 'LEBASI XP Terminal';
                 <div class="boot-subtitle">LAN Party Loader</div>
             </div>
             <div class="boot-progress">
-                <div class="boot-bar"></div>
+                <div class="boot-bar" id="boot-bar"></div>
             </div>
-            <div class="boot-messages">
-                <p>Loading party playlist...</p>
-                <p>Configuring 12-player network...</p>
-                <p>Mounting snack drives...</p>
-                <p>Launching XP desktop shell...</p>
-            </div>
+            <div class="boot-messages" id="boot-messages" role="log" aria-live="polite"></div>
         </div>
 
         <div class="screen login-screen" id="login-screen">
@@ -66,6 +55,7 @@ $title = 'LEBASI XP Terminal';
                         <input type="password" id="password" autocomplete="off" placeholder="Enter password">
                         <button type="submit">Log On</button>
                         <div class="login-error" id="login-error"></div>
+                        <div class="login-status" id="login-status"></div>
                     </form>
                 </div>
             </div>

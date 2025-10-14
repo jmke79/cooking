@@ -66,9 +66,19 @@ body {
     margin-bottom: 30px;
 }
 
-.bios-body p {
-    margin-bottom: 10px;
+.bios-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 240px;
+}
+
+.bios-line {
     animation: flicker 1.4s infinite alternate;
+}
+
+.bios-line--accent {
+    color: #7cff86;
 }
 
 .bios-footer {
@@ -114,12 +124,27 @@ body {
     width: 0;
     height: 100%;
     background: linear-gradient(90deg, var(--boot-highlight), #8fbcff);
-    animation: bootload 5s forwards;
+    transition: width 0.4s ease;
 }
 
 .boot-messages {
     font-size: 1rem;
-    opacity: 0.7;
+    opacity: 0.85;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.boot-message {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.boot-message.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .login-screen {
@@ -260,6 +285,13 @@ body {
     min-height: 18px;
     font-size: 0.85rem;
     color: #ff9c9c;
+    text-align: center;
+}
+
+.login-status {
+    min-height: 18px;
+    font-size: 0.85rem;
+    color: #92ffb9;
     text-align: center;
 }
 

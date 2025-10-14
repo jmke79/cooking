@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
     const loginError = document.getElementById('login-error');
+    const loginStatus = document.getElementById('login-status');
 
     const terminalOutput = document.getElementById('terminal-output');
     const terminalInput = document.getElementById('terminal-input');
@@ -21,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const windows = Array.from(document.querySelectorAll('.window'));
     const taskbarItems = Array.from(document.querySelectorAll('.taskbar-item'));
     const trayClock = document.getElementById('tray-clock');
+
+    const biosBody = document.getElementById('bios-body');
+    const bootMessages = document.getElementById('boot-messages');
+    const bootBar = document.getElementById('boot-bar');
 
     const windowMap = windows.reduce((acc, win) => {
         acc[win.dataset.window] = win;
@@ -40,20 +45,111 @@ document.addEventListener('DOMContentLoaded', () => {
         screens[name].classList.add('active');
     };
 
-    const bootSequence = [
-        { screen: 'bios', delay: 0 },
-        { screen: 'boot', delay: 4500 },
-        { screen: 'login', delay: 10500 }
+    const biosLines = [
+        { text: 'Initializing LEBASI LAN Party BIOS...', accent: true },
+        { text: '12-seat rig detector................................ OK' },
+        { text: 'Energy drink reserves............................... MAX' },
+        { text: 'RGB sync matrix..................................... ONLINE' },
+        { text: 'Retro XP boot modules.............................. READY' },
+        { text: 'LAN firewalls....................................... PASS' }
     ];
 
-    bootSequence.forEach(({ screen, delay }) => {
-        setTimeout(() => {
-            showScreen(screen);
-            if (screen === 'login') {
-                setTimeout(() => passwordInput.focus(), 100);
+    const bootLineItems = [
+        'Loading LEBASI XP kernel extensions...',
+        'Configuring 12-player private network...',
+        'Mounting snack depot drives...',
+        'Priming scoreboard overlay...',
+        'Launching LEBASI XP desktop...'
+    ];
+
+    const appendBiosLine = ({ text, accent }) => {
+        if (!biosBody) return;
+        const line = document.createElement('p');
+        line.className = accent ? 'bios-line bios-line--accent' : 'bios-line';
+        line.textContent = text;
+        biosBody.appendChild(line);
+    };
+
+    const appendBootMessage = (text) => {
+        if (!bootMessages) return;
+        const message = document.createElement('p');
+        message.className = 'boot-message';
+        message.textContent = text;
+        bootMessages.appendChild(message);
+        requestAnimationFrame(() => {
+            message.classList.add('visible');
+        });
+    };
+
+    const runBiosSequence = () => new Promise((resolve) => {
+        if (!biosBody) {
+            resolve();
+            return;
+        }
+
+        biosBody.innerHTML = '';
+        let index = 0;
+
+        const nextLine = () => {
+            appendBiosLine(biosLines[index]);
+            index += 1;
+            if (index < biosLines.length) {
+                setTimeout(nextLine, 600);
+            } else {
+                setTimeout(resolve, 700);
             }
-        }, delay);
+        };
+
+        nextLine();
     });
+
+    const runBootSequence = () => new Promise((resolve) => {
+        if (!bootMessages || !bootBar) {
+            resolve();
+            return;
+        }
+
+        bootMessages.innerHTML = '';
+        bootBar.style.width = '0%';
+
+        let progress = 0;
+        let messageIndex = 0;
+
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 18 + 7;
+            if (progress >= 100) {
+                progress = 100;
+            }
+
+            bootBar.style.width = `${progress}%`;
+
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                setTimeout(resolve, 600);
+            }
+        }, 420);
+
+        const pushMessage = () => {
+            appendBootMessage(bootLineItems[messageIndex]);
+            messageIndex += 1;
+            if (messageIndex < bootLineItems.length) {
+                setTimeout(pushMessage, 900);
+            }
+        };
+
+        pushMessage();
+    });
+
+    const startBootFlow = async () => {
+        showScreen('bios');
+        await runBiosSequence();
+        showScreen('boot');
+        await runBootSequence();
+        showScreen('login');
+        setTimeout(() => passwordInput.focus(), 200);
+    };
+
+    startBootFlow();
 
     const appendLine = (text = '') => {
         const line = document.createElement('div');
@@ -292,8 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateClock();
         clockIntervalId = setInterval(updateClock, 1000);
-        openWindow('briefing');
-        openWindow('terminal');
+        setTimeout(() => openWindow('briefing'), 200);
+        setTimeout(() => openWindow('terminal'), 400);
     };
 
     loginForm.addEventListener('submit', (event) => {
@@ -303,11 +399,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (username.toLowerCase() === expectedUsername && password === expectedPassword) {
             loginError.textContent = '';
+            loginStatus.textContent = 'Signing in to the LEBASI desktop...';
+            showDesktop();
             setTimeout(() => {
-                showDesktop();
-            }, 500);
+                loginStatus.textContent = '';
+            }, 2000);
         } else {
             loginError.textContent = 'Invalid credentials. Hint: check the LAN party welcome phrase!';
+            loginStatus.textContent = '';
             passwordInput.value = '';
             passwordInput.focus();
         }
